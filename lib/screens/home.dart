@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:micro/screens/addCow.dart';
 import 'package:micro/widgets/cowList.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,25 @@ class HomeScreen extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       backgroundColor: Colors.black,
-      body: Container(
-          margin: EdgeInsets.fromLTRB(10, 20, 10, 10), child: CowListScreen()),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: CowListScreen(),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddCowScreen()));
+              },
+              child: Text('Add Cow'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

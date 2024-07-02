@@ -102,13 +102,12 @@ class _AddCowScreenState extends State<AddCowScreen> {
       final id = FirebaseFirestore.instance.collection('cows').doc().id;
       final name = _nameController.text;
       final dateOfBirth = DateTime.parse(_dateOfBirthController.text);
-      final firstDateOfMating = '-';
 
       final cow = Cow(
           id: id,
           name: name,
           dateOfBirth: dateOfBirth,
-          firstDateOfMating: firstDateOfMating,
+          firstDateOfMating: [],
           milkProduction: [],
           dateOfGiveBirth: []);
       try {

@@ -6,7 +6,7 @@ class Cow {
   String name;
   DateTime dateOfBirth;
   List<DateTime> dateOfGiveBirth;
-  String firstDateOfMating;
+  List<String> firstDateOfMating;
   List<MilkProductionEntry> milkProduction;
 
   Cow({
@@ -25,7 +25,8 @@ class Cow {
       'dateOfBirth': dateOfBirth.toIso8601String(),
       'firstDateOfMating': firstDateOfMating,
       'milkProduction': milkProduction.map((entry) => entry.toMap()).toList(),
-      'dateOfGiveBirth': dateOfGiveBirth.map((date) => date.toIso8601String()).toList(),
+      'dateOfGiveBirth':
+          dateOfGiveBirth.map((date) => date.toIso8601String()).toList(),
     };
   }
 
@@ -35,9 +36,11 @@ class Cow {
       id: data['id'],
       name: data['name'],
       dateOfBirth: DateTime.parse(data['dateOfBirth']),
-      firstDateOfMating: data['firstDateOfMating'],
+      firstDateOfMating:
+          (data['firstDateOfMating'] as List<dynamic>).cast<String>(),
       milkProduction: (data['milkProduction'] as List<dynamic>)
-          .map((entry) => MilkProductionEntry.fromMap(entry as Map<String, dynamic>))
+          .map((entry) =>
+              MilkProductionEntry.fromMap(entry as Map<String, dynamic>))
           .toList(),
       dateOfGiveBirth: (data['dateOfGiveBirth'] as List<dynamic>)
           .map((date) => DateTime.parse(date))

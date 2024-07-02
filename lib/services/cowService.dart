@@ -13,6 +13,14 @@ class CowService {
     }
   }
 
+  Future<void> updateCow(Cow cow) async {
+    try {
+      await _firestore.collection(collectionName).doc(cow.id).update(cow.toMap());
+    } catch (e) {
+      print('Error updating cow: $e');
+    }
+  }
+
   Future<List<Cow>> fetchCows() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection(collectionName).get();

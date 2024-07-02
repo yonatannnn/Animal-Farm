@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:micro/models/cowModel.dart'; // Import your Cow model
+import 'package:micro/models/cowModel.dart';
+import 'package:micro/screens/cowDetailScreen.dart'; // Import your Cow model
 
 class SingleCow extends StatelessWidget {
   final Cow cow;
   final int index;
 
-  SingleCow({
-    Key? key,
-    required this.cow,
-    required this.index
-  }) : super(key: key);
+  SingleCow({Key? key, required this.cow, required this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,10 @@ class SingleCow extends StatelessWidget {
       elevation: 3,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
-        leading: Text('$index' ,style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+        leading: Text(
+          '$index',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         title: Text(
           cow.name,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -31,12 +32,14 @@ class SingleCow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Date of Birth: $formattedDateOfBirth'),
-            Text('First Date of Mating: ${cow.firstDateOfMating}'),
-            Text(
-                'Dates of Give Birth: ${formattedDatesOfGiveBirth.join(", ")}'),
           ],
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (contex) => CowDetailScreen(cow: cow)));
+        },
       ),
     );
   }
