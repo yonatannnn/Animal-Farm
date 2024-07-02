@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro/models/cowModel.dart';
 import 'package:micro/models/milkProduction.dart';
 import 'package:abushakir/abushakir.dart';
+import 'package:micro/screens/cowDetailScreen.dart';
 
 class AddMilkProductionScreen extends StatefulWidget {
   final Cow cow;
@@ -48,7 +49,11 @@ class _AddMilkProductionScreenState extends State<AddMilkProductionScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Milk Production added successfully')));
-      Navigator.pop(context);
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (contex) => CowDetailScreen(cowId: widget.cow.id)));
     }
   }
 

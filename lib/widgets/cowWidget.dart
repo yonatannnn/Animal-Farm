@@ -38,7 +38,7 @@ class SingleCow extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (contex) => CowDetailScreen(cow: cow)));
+                  builder: (contex) => CowDetailScreen(cowId: cow.id)));
         },
       ),
     );

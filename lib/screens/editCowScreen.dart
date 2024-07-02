@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:micro/models/cowModel.dart';
+import 'package:micro/screens/cowDetailScreen.dart';
 import 'package:micro/services/cowService.dart';
 
 class EditCowScreen extends StatefulWidget {
@@ -14,6 +16,8 @@ class EditCowScreen extends StatefulWidget {
 class _EditCowScreenState extends State<EditCowScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _dateOfBirthController = TextEditingController();
+  TextEditingController _firstDateOfMatingController = TextEditingController();
+  List<TextEditingController> _datesOfGiveBirthControllers = [];
 
   final CowService _cowService = CowService();
 
@@ -23,13 +27,19 @@ class _EditCowScreenState extends State<EditCowScreen> {
     _nameController.text = widget.cow.name;
     _dateOfBirthController.text =
         widget.cow.dateOfBirth.toLocal().toString().split(' ')[0];
+    _firstDateOfMatingController.text = widget.cow.firstDateOfMating.join(', ');
+    _datesOfGiveBirthControllers = widget.cow.dateOfGiveBirth
+        .map((date) =>
+            TextEditingController(text: DateFormat('yyyy-MM-dd').format(date)))
+        .toList();
   }
 
   @override
   void dispose() {
-    // Dispose controllers
     _nameController.dispose();
     _dateOfBirthController.dispose();
+    _firstDateOfMatingController.dispose();
+    _datesOfGiveBirthControllers.forEach((controller) => controller.dispose());
     super.dispose();
   }
 
@@ -46,14 +56,13 @@ class _EditCowScreenState extends State<EditCowScreen> {
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildTextField(_nameController, 'Name', 'Enter cow name'),
             SizedBox(height: 20),
             _buildTextField(_dateOfBirthController,
                 'Date of Birth (YYYY-MM-DD)', 'Enter date of birth'),
-            SizedBox(height: 20),
-            _buildDatesOfGiveBirth(),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveCow,
@@ -89,78 +98,30 @@ class _EditCowScreenState extends State<EditCowScreen> {
     );
   }
 
-  Widget _buildDatesOfGiveBirth() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Dates of Give Birth',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ),
-        SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            for (int i = 0; i < widget.cow.dateOfGiveBirth.length; i++)
-              Chip(
-                label: Text(
-                  widget.cow.dateOfGiveBirth[i]
-                      .toLocal()
-                      .toString()
-                      .split(' ')[0],
-                  style: TextStyle(color: Colors.white),
-                ),
-                backgroundColor: Colors.blue,
-                deleteButtonTooltipMessage: 'Remove this date',
-                onDeleted: () {
-                  setState(() {
-                    widget.cow.dateOfGiveBirth.removeAt(i);
-                  });
-                },
-              ),
-          ],
-        ),
-        SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: _addDateOfGiveBirth,
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
-          ),
-          child: Text('Add Date of Give Birth'),
-        ),
-      ],
-    );
-  }
-
-  void _addDateOfGiveBirth() async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (selectedDate != null) {
-      setState(() {
-        widget.cow.dateOfGiveBirth.add(selectedDate);
-      });
-    }
-  }
-
   void _saveCow() async {
-    // Validate fields and update cow details
     if (_nameController.text.isNotEmpty &&
         _dateOfBirthController.text.isNotEmpty) {
       final name = _nameController.text;
       final dateOfBirth = DateTime.parse(_dateOfBirthController.text);
+      final firstDateOfMating = _firstDateOfMatingController.text
+          .split(',')
+          .map((e) => e.trim())
+          .toList();
+      final datesOfGiveBirth = _datesOfGiveBirthControllers
+          .map((controller) => DateTime.parse(controller.text))
+          .toList();
 
-      // Update cow object
       widget.cow.name = name;
       widget.cow.dateOfBirth = dateOfBirth;
+      widget.cow.firstDateOfMating = firstDateOfMating;
+      widget.cow.dateOfGiveBirth = datesOfGiveBirth;
 
       try {
         await _cowService.updateCow(widget.cow);
-        Navigator.pop(context); // Close the edit screen
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CowDetailScreen(cowId: widget.cow.id)));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

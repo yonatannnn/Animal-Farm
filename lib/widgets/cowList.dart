@@ -8,8 +8,8 @@ class CowListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Cow>>(
-      future: _cowService.fetchCows(),
+    return StreamBuilder<List<Cow>>(
+      stream: _cowService.getCowsStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

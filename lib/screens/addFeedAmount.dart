@@ -1,18 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro/models/cowModel.dart';
-import 'package:micro/services/cowService.dart';
+import 'package:micro/models/feedAmount.dart';
+import 'package:micro/screens/cowDetailScreen.dart';
 
-class AddCowScreen extends StatefulWidget {
+class AddFeedAmountScreen extends StatefulWidget {
+  final Cow cow;
+
+  AddFeedAmountScreen({required this.cow});
+
   @override
-  _AddCowScreenState createState() => _AddCowScreenState();
+  _AddFeedAmountScreenState createState() => _AddFeedAmountScreenState();
 }
 
-class _AddCowScreenState extends State<AddCowScreen> {
+class _AddFeedAmountScreenState extends State<AddFeedAmountScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateOfBirthController = TextEditingController();
-  final CowService _cowService = CowService();
+  final _ingredientController = TextEditingController();
+  final _amountController = TextEditingController();
+
+  @override
+  void dispose() {
+    _ingredientController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveFeedAmount() async {
+    if (_formKey.currentState!.validate()) {
+      FeedAmount feed = FeedAmount(
+        ingredient: _ingredientController.text,
+        amount: double.parse(_amountController.text),
+      );
+
+      widget.cow.feedAmount.add(feed);
+
+      await FirebaseFirestore.instance
+          .collection('cows')
+          .doc(widget.cow.id)
+          .update({
+        'feedAmount': widget.cow.feedAmount.map((e) => e.toMap()).toList(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Feed Amount added successfully')));
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CowDetailScreen(cowId: widget.cow.id)));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +57,7 @@ class _AddCowScreenState extends State<AddCowScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          '',
+          'Add Feed Amount',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -37,7 +74,7 @@ class _AddCowScreenState extends State<AddCowScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Add Cow',
+                    'Add Feed Amount',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -46,15 +83,21 @@ class _AddCowScreenState extends State<AddCowScreen> {
                   ),
                   SizedBox(height: 20),
                   _buildTextField(
-                      _nameController, 'Name', 'Please enter a name'),
+                    _ingredientController,
+                    'Ingredient',
+                    'Enter ingredient name',
+                    TextInputType.text,
+                  ),
                   SizedBox(height: 20),
                   _buildTextField(
-                      _dateOfBirthController,
-                      'Date of Birth (YYYY-MM-DD)',
-                      'Please enter a date of birth'),
+                    _amountController,
+                    'Amount (kg)',
+                    'Enter amount in kilograms',
+                    TextInputType.numberWithOptions(decimal: true),
+                  ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _saveCow,
+                    onPressed: _saveFeedAmount,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
                       backgroundColor: Colors.white,
@@ -74,7 +117,7 @@ class _AddCowScreenState extends State<AddCowScreen> {
   }
 
   Widget _buildTextField(TextEditingController controller, String labelText,
-      String validationMessage) {
+      String validationMessage, TextInputType keyboardType) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
@@ -88,6 +131,7 @@ class _AddCowScreenState extends State<AddCowScreen> {
         ),
       ),
       style: TextStyle(color: Colors.white),
+      keyboardType: keyboardType,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return validationMessage;
@@ -95,39 +139,5 @@ class _AddCowScreenState extends State<AddCowScreen> {
         return null;
       },
     );
-  }
-
-  Future<void> _saveCow() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final id = FirebaseFirestore.instance.collection('cows').doc().id;
-      final name = _nameController.text;
-      final dateOfBirth = DateTime.parse(_dateOfBirthController.text);
-
-      final cow = Cow(
-          id: id,
-          name: name,
-          dateOfBirth: dateOfBirth,
-          feedAmount: [],
-          firstDateOfMating: [],
-          milkProduction: [],
-          dateOfGiveBirth: []);
-      try {
-        await _cowService.saveCow(cow);
-
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Cow added successfully')));
-        _dateOfBirthController.clear();
-        _nameController.clear();
-      } catch (e) {
-        throw Exception('Error');
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _dateOfBirthController.dispose();
-    super.dispose();
   }
 }
