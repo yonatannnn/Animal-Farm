@@ -4,6 +4,7 @@ import 'package:micro/models/cowModel.dart';
 import 'package:micro/models/milkProduction.dart';
 import 'package:abushakir/abushakir.dart';
 import 'package:micro/screens/cowDetailScreen.dart';
+import 'package:micro/widgets/drawer.dart';
 
 class AddMilkProductionScreen extends StatefulWidget {
   final Cow cow;
@@ -61,8 +62,7 @@ class _AddMilkProductionScreenState extends State<AddMilkProductionScreen> {
     setState(() {
       _selectedEthiopianDate = EtDatetime(
           year: _selectedYear, month: _selectedMonth, day: _selectedDay);
-      _selectedDate =
-          DateTime.fromMillisecondsSinceEpoch(_selectedEthiopianDate!.moment);
+      _selectedDate = DateTime(_selectedYear, _selectedMonth, _selectedDay);
     });
   }
 
@@ -70,9 +70,8 @@ class _AddMilkProductionScreenState extends State<AddMilkProductionScreen> {
   Widget build(BuildContext context) {
     List<int> years =
         List<int>.generate(50, (i) => 2000 + i); // From year 2000 to 2049
-    List<int> months =
-        List<int>.generate(13, (i) => i + 1); // Ethiopian months (1-13)
-    List<int> days = List<int>.generate(30, (i) => i + 1); // Days (1-30)
+    List<int> months = List<int>.generate(13, (i) => i + 1);
+    List<int> days = List<int>.generate(30, (i) => i + 1);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -85,6 +84,7 @@ class _AddMilkProductionScreenState extends State<AddMilkProductionScreen> {
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
       ),
+      drawer: CustomDrawer(),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),

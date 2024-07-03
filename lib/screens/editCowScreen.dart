@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:micro/models/cowModel.dart';
 import 'package:micro/screens/cowDetailScreen.dart';
 import 'package:micro/services/cowService.dart';
+import 'package:micro/widgets/drawer.dart';
 
 class EditCowScreen extends StatefulWidget {
   final Cow cow;
@@ -52,6 +53,7 @@ class _EditCowScreenState extends State<EditCowScreen> {
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
       ),
+      drawer: CustomDrawer(),
       backgroundColor: Colors.black,
       body: Padding(
         padding: EdgeInsets.all(16.0),

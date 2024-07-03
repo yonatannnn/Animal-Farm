@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro/models/cowModel.dart';
 import 'package:micro/screens/cowDetailScreen.dart';
+import 'package:micro/widgets/drawer.dart';
 
 class AddDateOfMatingScreen extends StatefulWidget {
   final Cow cow;
@@ -58,6 +59,7 @@ class _AddDateOfMatingScreenState extends State<AddDateOfMatingScreen> {
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
       ),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(

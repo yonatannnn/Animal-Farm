@@ -6,8 +6,11 @@ import 'package:micro/screens/addDateOGiveBirth.dart';
 import 'package:micro/screens/addDateOfMatingScreen.dart';
 import 'package:micro/screens/addFeedAmount.dart';
 import 'package:micro/screens/addMilkProductionScreen.dart';
+import 'package:micro/screens/detailFeedAmountScreen.dart';
+import 'package:micro/screens/detailMilkProductionScreen.dart';
 import 'package:micro/screens/editCowScreen.dart';
 import 'package:micro/services/cowService.dart';
+import 'package:micro/widgets/drawer.dart';
 
 class CowDetailScreen extends StatefulWidget {
   final String cowId;
@@ -126,6 +129,7 @@ class _CowDetailScreenState extends State<CowDetailScreen> {
           ),
         ],
       ),
+      drawer: CustomDrawer(),
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
@@ -264,6 +268,49 @@ class _CowDetailScreenState extends State<CowDetailScreen> {
                           EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
                     child: Text('Add Date Of Give Birth'),
+                  ),
+                ]),
+              ),
+              SizedBox(height: 20),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailMilkProductionScreen(coww: cow!),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color.fromARGB(255, 255, 255, 255),
+                      backgroundColor: Color.fromARGB(255, 63, 54, 139),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    ),
+                    child: Text('Detail Milk Production'),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailFeedAmountScreen(coww: cow!),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color.fromARGB(255, 255, 255, 255),
+                      backgroundColor: Color.fromARGB(255, 63, 54, 139),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    ),
+                    child: Text('Detail feed Amount'),
                   ),
                 ]),
               ),

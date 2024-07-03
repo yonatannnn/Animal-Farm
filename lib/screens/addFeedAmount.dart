@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro/models/cowModel.dart';
 import 'package:micro/models/feedAmount.dart';
 import 'package:micro/screens/cowDetailScreen.dart';
+import 'package:micro/widgets/drawer.dart';
 
 class AddFeedAmountScreen extends StatefulWidget {
   final Cow cow;
@@ -64,6 +65,7 @@ class _AddFeedAmountScreenState extends State<AddFeedAmountScreen> {
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
       ),
+      drawer: CustomDrawer(),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),

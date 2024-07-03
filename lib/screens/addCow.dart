@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:micro/models/cowModel.dart';
+import 'package:micro/screens/home.dart';
 import 'package:micro/services/cowService.dart';
+import 'package:micro/widgets/drawer.dart';
 
 class AddCowScreen extends StatefulWidget {
   @override
@@ -27,6 +29,7 @@ class _AddCowScreenState extends State<AddCowScreen> {
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
       ),
+      drawer: CustomDrawer(),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),

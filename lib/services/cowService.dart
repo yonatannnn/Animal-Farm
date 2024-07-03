@@ -24,6 +24,15 @@ class CowService {
     }
   }
 
+  Future<void> deleteCow(String cowId) async {
+    try {
+      await _firestore.collection(collectionName).doc(cowId).delete();
+      print('Cow deleted successfully');
+    } catch (e) {
+      print('Error deleting cow: $e');
+    }
+  }
+
   Future<List<Cow>> fetchCows() async {
     try {
       QuerySnapshot querySnapshot =

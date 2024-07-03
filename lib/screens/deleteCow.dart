@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:micro/screens/addCow.dart';
+import 'package:micro/screens/home.dart';
 import 'package:micro/widgets/cowList.dart';
+import 'package:micro/widgets/deleteCowList.dart';
 import 'package:micro/widgets/drawer.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class DeleteCowScreen extends StatelessWidget {
+  const DeleteCowScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Home',
+          'Delete Screen',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -26,15 +28,15 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: CowListScreen(),
+              child: DeleteCowListScreen(),
             ),
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddCowScreen()));
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
               },
-              child: Text('Add Cow'),
+              child: Text('Return To Home'),
             ),
           ],
         ),
